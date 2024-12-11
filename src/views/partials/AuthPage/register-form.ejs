@@ -1,204 +1,331 @@
-<div class="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
-    style="background-image: url('/images/login-bg.png');">
-    <div
-        class="bg-white/90 px-8 pt-6 pb-20 rounded-lg shadow-lg w-full max-w-3xl flex flex-col justify-between h-[35rem]">
-        <!-- Stepper -->
-        <div class="flex justify-center mb-8">
+  <!DOCTYPE html>
+  <html lang="vi">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Form Đăng Ký</title>
+      <link
+        href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css"
+        rel="stylesheet"
+      />
+    </head>
+
+    <body class="bg-gray-100">
+      <div
+        class="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+        style="background-image: url('/images/login-bg.png')"
+      >
+        <div
+          class="bg-white/90 px-8 pt-6 pb-20 rounded-lg shadow-lg w-full max-w-3xl flex flex-col justify-between h-[35rem]"
+        >
+          <!-- Stepper -->
+          <div class="flex justify-center mb-8">
             <div class="flex items-center">
-                <% const currentStep = step || 1 %>
-                <% for(let i=1; i <=3; i++) { %>
-                    <div class="flex items-center">
-                        <div
-                            class="<%= currentStep === i ? 'bg-blue-500 text-white' : currentStep > i ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700' %> rounded-full h-10 w-10 flex items-center justify-center font-semibold transition-colors">
-                            <%= i %>
-                        </div>
-                        <% if(i < 3) { %>
-                            <div
-                                class="w-16 h-1 <%= currentStep > i ? 'bg-blue-500' : 'bg-gray-200' %> transition-colors">
-                            </div>
-                            <% } %>
-                    </div>
-                    <% } %>
-            </div>
-        </div>
-
-        <form id="registerForm" method="POST" action="/auth/register" class="space-y-6">
-            <!-- Step 1: Role Selection -->
-            <% if(currentStep===1) { %>
-                <div class="space-y-4">
-                    <h2 class="text-3xl font-bold">Vai Trò</h2>
-                    <div class="flex justify-between space-x-4">
-                        <div>
-                            <input type="radio" name="role" value="subscriber" required class="hidden peer/subscriber"
-                                id="subscriber">
-                            <label for="subscriber"
-                                class="block w-full p-8 border-2 border-black rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 peer-checked/subscriber:border-blue-600 peer-checked/subscriber:bg-blue-200">
-                                <div class="flex items-center justify-center">
-                                    <img src="/images/subscriber.png" alt="" class="w-24 h-24">
-                                </div>
-                            </label>
-                            <span class="block text-lg font-medium text-center mt-2">Đọc giả</span>
-                        </div>
-
-                        <div>
-                            <input type="radio" name="role" value="writer" required class="hidden peer/writer"
-                                id="writer">
-                            <label for="writer"
-                                class="block w-full p-8 border-2 border-black rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 peer-checked/writer:border-blue-600 peer-checked/writer:bg-blue-200">
-                                <div class="flex items-center justify-center">
-                                    <img src="/images/writer.png" alt="" class="w-24 h-24">
-                                </div>
-                            </label>
-                            <span class="block text-lg font-medium text-center mt-2">Phóng viên</span>
-                        </div>
-
-                        <div>
-                            <input type="radio" name="role" value="editor" required class="hidden peer/editor"
-                                id="editor">
-                            <label for="editor"
-                                class="block w-full p-8 border-2 border-black rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 peer-checked/editor:border-blue-600 peer-checked/editor:bg-blue-200">
-                                <div class="flex items-center justify-center">
-                                    <img src="/images/editor.png" alt="" class="w-24 h-24">
-                                </div>
-                            </label>
-                            <span class="block text-lg font-medium text-center mt-2">Biên tập viên</span>
-                        </div>
-                    </div>
+              <% const currentStep = step || 1 %> <% for (let i = 1; i <= 3; i++)
+              { %>
+              <div class="flex items-center">
+                <div
+                  class="<%= currentStep === i ? 'bg-blue-500 text-white' : currentStep > i ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700' %> rounded-full h-10 w-10 flex items-center justify-center font-semibold transition-colors"
+                >
+                  <%= i %>
                 </div>
-
-                <!-- Step 2: Personal Information -->
-                <% } else if(currentStep===2) { %>
-                    <div class="space-y-4">
-                        <h2 class="text-3xl font-bold">Thông tin cá nhân</h2>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label for="name" class="block text-sm font-medium text-gray-700">Họ và tên <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" id="name" name="name" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email <span
-                                        class="text-red-500">*</span></label>
-                                <input type="email" id="email" name="email" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="dob" class="block text-sm font-medium text-gray-700">Ngày sinh <span
-                                        class="text-red-500">*</span></label>
-                                <input type="date" id="dob" name="dob" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="phone" class="block text-sm font-medium text-gray-700">Số điện thoại <span
-                                        class="text-red-500">*</span></label>
-                                <input type="tel" id="phone" name="phone" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="gender" class="block text-sm font-medium text-gray-700">Giới tính <span
-                                        class="text-red-500">*</span></label>
-                                <select id="gender" name="gender" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="">Chọn giới tính</option>
-                                    <option value="male">Nam</option>
-                                    <option value="female">Nữ</option>
-                                </select>
-                            </div>
-
-                            <div class="space-y-2">
-                                <label for="nationality" class="block text-sm font-medium text-gray-700">Quốc tịch <span
-                                        class="text-red-500">*</span></label>
-                                <select id="nationality" name="nationality" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="">Chọn quốc tịch</option>
-                                    <option value="VN">Việt Nam</option>
-                                    <option value="US">Hoa Kỳ</option>
-                                    <option value="UK">Anh</option>
-                                    <option value="JP">Nhật Bản</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Special Requirements -->
-                    <% } else { %>
-                        <div class="space-y-4">
-                            <h2 class="text-3xl font-bold">Đặc biệt</h2>
-                            <% if (role==='subscriber' ) { %>
-                                <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                    <p class="text-yellow-700">Tài khoản sẽ hết hạn sau 7 ngày</p>
-                                </div>
-                                <% } else if (role==='writer' ) { %>
-                                    <div class="space-y-2">
-                                        <label for="penName" class="block text-sm font-medium text-gray-700">Bút danh
-                                            <span class="text-red-500">*</span></label>
-                                        <input type="text" id="penName" name="penName" required
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                    </div>
-                                    <% } else if (role==='editor' ) { %>
-                                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                            <p class="text-blue-700">Bạn cần quản trị viên phê duyệt để trở thành biên
-                                                tập viên</p>
-                                        </div>
-                                        <% } %>
-                        </div>
-                        <% } %>
-        </form>
-
-        <!-- Navigation -->
-        <div class="flex flex-row items-end justify-end space-x-3">
-            <% if(currentStep> 1) { %>
-                <a href="/register-form?step=<%= currentStep - 1 %>"
-                    class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
-                    Quay lại
-                </a>
+                <% if (i < 3) { %>
+                <div
+                  class="w-16 h-1 <%= currentStep > i ? 'bg-blue-500' : 'bg-gray-200' %> transition-colors"
+                ></div>
                 <% } %>
+              </div>
+              <% } %>
+            </div>
+          </div>
 
-                    <% if(currentStep < 3) { %>
-                        <a href="#" onclick="return validateAndProceed(<%= currentStep %>)"
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                            Tiếp tục
-                        </a>
-                        <% } else { %>
-                            <button type="submit" form="registerForm"
-                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                Đăng ký
-                            </button>
-                            <% } %>
+          <form id="registerForm" class="space-y-6">
+            <!-- Step 1: Role Selection -->
+            <% if (currentStep === 1) { %>
+            <div class="space-y-4">
+              <h2 class="text-3xl font-bold">Vai Trò</h2>
+              <div class="flex justify-between space-x-4">
+                <!-- Radio Button Options -->
+                <div>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="subscriber"
+                    required
+                    id="subscriber"
+                    class="hidden peer/subscriber"
+                  />
+                  <label
+                    for="subscriber"
+                    class="block w-full p-8 border-2 border-black rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 peer-checked/subscriber:border-blue-600 peer-checked/subscriber:bg-blue-200"
+                  >
+                    <img src="/images/subscriber.png" alt="" class="w-24 h-24" />
+                  </label>
+                  <span class="block text-lg font-medium text-center mt-2"
+                    >Đọc giả</span
+                  >
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="writer"
+                    required
+                    id="writer"
+                    class="hidden peer/writer"
+                  />
+                  <label
+                    for="writer"
+                    class="block w-full p-8 border-2 border-black rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 peer-checked/writer:border-blue-600 peer-checked/writer:bg-blue-200"
+                  >
+                    <img src="/images/writer.png" alt="" class="w-24 h-24" />
+                  </label>
+                  <span class="block text-lg font-medium text-center mt-2"
+                    >Phóng viên</span
+                  >
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="editor"
+                    required
+                    id="editor"
+                    class="hidden peer/editor"
+                  />
+                  <label
+                    for="editor"
+                    class="block w-full p-8 border-2 border-black rounded-lg cursor-pointer transition-all duration-200 hover:border-blue-400 peer-checked/editor:border-blue-600 peer-checked/editor:bg-blue-200"
+                  >
+                    <img src="/images/editor.png" alt="" class="w-24 h-24" />
+                  </label>
+                  <span class="block text-lg font-medium text-center mt-2"
+                    >Biên tập viên</span
+                  >
+                </div>
+              </div>
+            </div>
+            <% } else if (currentStep === 2) { %>
+            <!-- Step 2: Personal Information -->
+            <div class="space-y-4">
+              <h2 class="text-3xl font-bold">Thông tin cá nhân</h2>
+              <div class="grid grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label
+                    for="name"
+                    class="block text-sm font-medium text-gray-700"
+                    >Họ và tên <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-gray-700"
+                    >Email <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label for="dob" class="block text-sm font-medium text-gray-700"
+                    >Ngày sinh <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="date"
+                    id="dob"
+                    name="dob"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label
+                    for="phone"
+                    class="block text-sm font-medium text-gray-700"
+                    >Số điện thoại <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label
+                    for="gender"
+                    class="block text-sm font-medium text-gray-700"
+                    >Giới tính <span class="text-red-500">*</span></label
+                  >
+                  <select
+                    id="gender"
+                    name="gender"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">Chọn giới tính</option>
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                  </select>
+                </div>
+                <div class="space-y-2">
+                  <label
+                    for="country"
+                    class="block text-sm font-medium text-gray-700"
+                    >Quốc tịch <span class="text-red-500">*</span></label
+                  >
+                  <select
+                    id="country"
+                    name="country"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">Chọn quốc tịch</option>
+                    <option value="VN">Việt Nam</option>
+                    <option value="US">Hoa Kỳ</option>
+                    <option value="UK">Anh</option>
+                    <option value="JP">Nhật Bản</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <% } else { %>
+            <!-- Step 3: Special Requirements -->
+            <div class="space-y-4">
+              <h2 class="text-3xl font-bold">Đặc biệt</h2>
+              <% if (role === 'subscriber') { %>
+              <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p class="text-yellow-700">Tài khoản sẽ hết hạn sau 7 ngày</p>
+              </div>
+              <% } else if (role === 'writer') { %>
+              <div class="space-y-2">
+                <label
+                  for="penName"
+                  class="block text-sm font-medium text-gray-700"
+                  >Bút danh <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  id="penName"
+                  name="penName"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+              </div>
+              <% } else if (role === 'editor') { %>
+              <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p class="text-blue-700">
+                  Bạn cần quản trị viên phê duyệt để trở thành biên tập viên
+                </p>
+              </div>
+              <% } %>
+            </div>
+            <% } %>
+          </form>
+
+          <!-- Navigation -->
+          <div class="flex flex-row items-end justify-end space-x-3">
+            <% if (currentStep > 1) { %>
+            <a
+              href="/auth/register-form?step=<%= currentStep - 1 %>"
+              class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              >Quay lại</a
+            >
+            <% } %> <% if (currentStep < 3) { %>
+            <a
+              href="#"
+              onclick="return validateAndProceed(<%= currentStep %>)"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >Tiếp tục</a
+            >
+            <% } else { %>
+            <a
+              href="#"
+              onclick="return validateAndSubmit()"
+              class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >Đăng ký</a
+            >
+            <% } %>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<script>
-    function validateAndProceed(step) {
-        const form = document.getElementById('registerForm');
+      <script>
+        async function validateAndProceed(step) {
+          const form = document.getElementById("registerForm");
 
-        if (step === 1) {
-            const selectedRole = document.querySelector('input[name="role"]:checked');
+          // Step 1 Validation
+          if (step === 1) {
+            const selectedRole = document.querySelector(
+              'input[name="role"]:checked'
+            );
             if (!selectedRole) {
-                alert('Vui lòng chọn vai trò');
-                return false;
+              alert("Vui lòng chọn vai trò");
+              return false;
             }
-            window.location.href = `/register-form?step=2&role=${selectedRole.value}`;
-            return false;
+          }
+
+          // Step 2 Validation
+          if (step === 2) {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const dob = document.getElementById("dob").value;
+            const phone = document.getElementById("phone").value;
+            const gender = document.getElementById("gender").value;
+            const country = document.getElementById("country").value;
+
+            if (!name || !email || !dob || !phone || !gender || !country) {
+              alert("Vui lòng điền đầy đủ thông tin");
+              return false;
+            }
+          }
+
+          // Step 3: Proceed to the next step
+          const nextStep = step + 1;
+          window.location.href = `/auth/register-form?step=${nextStep}`;
+          return false;
         }
 
-        if (step === 2) {
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return false;
-            }
-            const formData = new FormData(form);
-            const queryString = new URLSearchParams(formData).toString();
-            window.location.href = `/register-form?step=3&${queryString}`;
-            return false;
-        }
+        async function validateAndSubmit() {
+          const form = document.getElementById("registerForm");
+          const formData = new FormData(form);
+          const jsonData = Object.fromEntries(formData.entries());
 
-        return true;
-    }
-</script>
+          try {
+            const response = await fetch("/register-form", {
+              method: "POST", // Assuming POST request
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(jsonData),
+            });
+
+            console.log("Phản hồi từ server: ", response); // Kiểm tra phản hồi từ server
+
+            if (!response.ok) {
+              throw new Error("Đăng ký không thành công");
+            }
+
+            const result = await response.json(); // Giả sử server trả về JSON
+            console.log("Kết quả từ server: ", result); // Kiểm tra kết quả trả về
+            alert("Đăng ký thành công!");
+            window.location.href = "/auth/login";
+          } catch (error) {
+            console.error(error);
+            alert(error.message);
+          }
+        }
+      </script>
+    </body>
+  </html>

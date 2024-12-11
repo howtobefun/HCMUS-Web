@@ -3,6 +3,9 @@ import express from "express";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
+import { validationResult, body } from 'express-validator';
+import bodyParser from "body-parser"; // Nếu sử dụng body-parser
+
 
 const router = express.Router();
 
@@ -44,32 +47,39 @@ passport.deserializeUser(async (id, done) => {
 
 // Register new user
 router.post("/register", async (req, res) => {
-  console.log("Request body:", req.body); // Add this line for debugging
-  const { email, password, name, dob, role, penName, category } = req.body;
 
-  if (!email || !password || !name || !dob || !role) {
+  const { email, password, confirmPassword, name } = req.body;
+  // Kiểm tra các trường bắt buộc
+  if (!email || !password || !confirmPassword || !name) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).json({ message: "Email already registered" });
+  // Kiểm tra confirmPassword
+  if (password !== confirmPassword) {
+    return res.status(400).json({ message: "Passwords do not match" });
   }
 
   try {
+    // Kiểm tra email đã tồn tại chưa
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // Mã hóa mật khẩu
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Tạo user mới
     const newUser = new User({
       email,
       password: hashedPassword,
       name,
-      dob,
-      role,
-      penName,
-      category,
     });
 
     await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
+
+    // Phản hồi thành công
+    res.redirect("/auth/register-form");
   } catch (error) {
     console.error("Error registering user:", error);
     res
@@ -77,6 +87,70 @@ router.post("/register", async (req, res) => {
       .json({ message: "Error registering user", error: error.message });
   }
 });
+
+router.post(
+  '/register-form',
+  [
+    body('email').isEmail().withMessage('Email không hợp lệ.'),
+    body('role').notEmpty().withMessage('Vai trò không được để trống.'),
+    body('name').notEmpty().withMessage('Họ và tên không được để trống.'),
+    body('dob').notEmpty().withMessage('Ngày sinh không được để trống.'),
+    body('phone').notEmpty().withMessage('Số điện thoại không được để trống.'),
+    body('gender').notEmpty().withMessage('Giới tính không được để trống.'),
+    body('country').notEmpty().withMessage('Quốc tịch không được để trống.'),
+  ],
+  async (req, res) => {
+    // Lấy các lỗi nếu có
+    const errors = validationResult(req);
+
+    // In ra body nhận được để debug
+    console.log('Dữ liệu nhận được: ', req.body);
+
+    // Kiểm tra nếu có lỗi từ validation
+    if (!errors.isEmpty()) {
+      console.log('Lỗi validation: ', errors.array());
+      return res.status(400).json({
+        message: 'Dữ liệu đầu vào không hợp lệ.',
+        errors: errors.array(), // Trả về lỗi chi tiết
+      });
+    }
+
+    const { email, role, name, dob, phone, gender, country } = req.body;
+
+    try {
+      // Kiểm tra nếu người dùng đã tồn tại trong hệ thống
+      const existingUser = await User.findOne({ email });
+
+      if (existingUser) {
+        return res.status(400).json({
+          message: 'Email đã được sử dụng. Vui lòng chọn email khác.',
+        });
+      }
+
+      const user = await User.findOneAndUpdate(
+        { email }, // Điều kiện tìm kiếm
+        { $set: updateData }, // Dữ liệu cập nhật
+        { new: true, upsert: false } // Trả về user đã cập nhật, không tự động tạo nếu không tồn tại
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          message: 'Không tìm thấy người dùng với email đã cung cấp.',
+        });
+      }
+
+      return res.status(200).json({
+        message: 'Cập nhật thông tin người dùng thành công.',
+        user,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        message: 'Đã xảy ra lỗi trong quá trình cập nhật.',
+        error: err.message,
+      });
+    }
+  }
+);
 
 // Log in existing user
 router.post("/login", passport.authenticate("local"), (req, res) => {
